@@ -1,6 +1,6 @@
 
 
-# Analyzing weblogs with Elasticsearch in the cloud: Using Logstsh & Kibana on Found by Elastic pt. I
+# Analyzing weblogs with Elasticsearch in the cloud: Using Logstash & Kibana on Found by Elastic pt. I
 
 This is part one of a two post blog series, aiming to demonstrate how to feed logs from IIS into Elasticsearch and Kibana via Logstash, using the hosted services provided by Found by Elastic. 
 This post will deal with setting up the basic functionality and securing connections. Part 2 will show how to configure Logstash to read from IIS log files, and how to use Kibana 4 to visualize web traffic.
@@ -16,7 +16,7 @@ If you want to follow along, download and extract Logstash 1.5.RC4 or later, and
 
 Creating a new trial cluster in Found is just a matter of logging in and pressing a button.  It takes a few seconds until the cluster is ready, and a screen with some basic information on how to connect pops up. We need the address for the HTTPS endpoint, so copy that out.
 
-Configuring Logstash to use Found by Elastic 
+## Configuring Logstash to use Found by Elastic 
 
 Now with the brand new SSL connection option in Logstash, connecting to Found is as simple as this logstash configuration 
 ```
@@ -35,7 +35,7 @@ Save the file as found.conf
 
 Start up logstash using
 
-```bin\logstash.bat agent -v -f found.conf```
+```bin\logstash.bat agent --verbose -f found.conf```
 
 You should see  a message similar to 
 ````
@@ -79,7 +79,7 @@ Setting Access control in Found:
           require: true
     action: allow
 ````
-Press save and the changes are immediately effective. Try to reload the Kibana at http://localhost:5601, you should be denied access. 
+Press save and the changes are immediately effective. Try to reload the Kibana at  [http://localhost:5601](http://localhost:5601), you should be denied access. 
 
 Open up the kibana.yml file from before and modify it: 
 ````
