@@ -48,18 +48,20 @@ Clicking on the [Discover](http://www.elastic.co/guide/en/kibana/current/discove
 
 ## Graphing Most used query terms in Kibana
 For a search application, the most interesting metrics is perhaps the most used query terms. 
-Clicking on the "Visualize" button at the bottom of the field metrics opens up the Visualize tab showing a visualization of most used query terms. If you want the analysis to show complete queries, and not broken up into terms, use the "query.raw" field rather than "query". Logstash by default indexes all fields into two fields, one analyzed, where all terms are split, and the other not analyzed. The not analyzed fields are useful when you need statistics on the whole field value.
+Clicking on the "Visualize" button at the bottom of the field metrics opens up the Visualize tab showing a visualization of most used query terms. If you want the analysis to show complete queries, and not broken up into terms, use the "query.raw" field rather than "query". Logstash by default indexes all fields into two fields, one analyzed, where all terms are split, and the other not analyzed. The not-analyzed fields are useful when you need statistics on the whole field value.
+![Most used queries](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/mostUsedQueries.png)
+Normally, a graph of most used queries follows an inverse power distribution, with the top 20% of queries accounting for 80% of traffic. 
 
 
 ## Graphing Number of Requests
 Enter the Visualize panel, and select to create a new visualization. Select "Line chart" as type of visualization, from a new search. Press the Add aggregation button, and select Aggregation type Date histogram, and the field @timestamp. Press Apply at the bottom. If you have data (in the applied date range), you should see a graph similar to this one. 
-
+![Requests pr second](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/requestsPrSecond.png)
 
 
 ## Graphing Response Times
 If you looked closely at the Logstash configuration, you will find that it  contains a section where a field “time_taken” is converted into integer. By default, Logstash will output all fields as strings, to be able to use the Histogram aggregation, we have to be explicit about making sure the field has the right type. 
 Again, select to start a new visualization, of type “Line Chart”, from a new search. Now we are going to modify the Y-Axis, setting the type of Aggregation to Average, and using the field “time_taken” as input. For X-Axis we will use the Date histogram and the @timestamp field. Now you should see a graph displaying how the average response times varies over time.
-
+![Average Response Time](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/AverageResponseTimes.png)
 
 
 This is just a scratch on the surface of how to work with visualizing log statistics using the ELK stack. 
