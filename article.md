@@ -55,6 +55,8 @@ elasticsearch_url: "https://10ee9a4efisk7143172615935c183a3b-us-east-1.foundclus
 ````
 Of course, we need to verify that this really works, so we open up Kibana on [http://localhost:5601](http://localhost:5601), select the logstash index template, with the @timestamp data field as suggested, and open up the discover panel. Now, if there was less than 15 minutes since you inserted your favorite test term in logstash (previous step), you should see it already. Otherwise, change the date range by clicking on the selector in the top right corner. 
 
+![Kibana test](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/kibanatest.png)
+
 ## Locking it down
 Now this wasn’t very hard. We created an elasticsearch cluster, fed data into it and displayed in Kibana in less than 5 minutes. We must have forgotten something!? And yes, of course! Something about security. We made sure to use secure connections with SSL, and the address generated for our cluster contains a 32 character long, randomly generated list of characters, which is pretty hard to guess. Should, however, the address slip out of our hands, hackers could easily delete our entire cluster. And we don’t want that to happen. So let’s see how we can make everything work when we add some basic security measures.
 
