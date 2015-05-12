@@ -20,11 +20,13 @@ summary: |
 ## Getting the Bits
 
 For this demo I will be running Logstash and Kibana from my Windows laptop. 
-If you want to follow along, download and extract Logstash 1.5.RC4 or later, and Kibana 4.0.2 or later from [https://www.elastic.co/downloads](https://www.elastic.co/downloads). 
+If you want to follow along, download and extract Logstash 1.5.RC4 or later, and Kibana 4.0.2 or later from [https://www.elastic.co/downloads](https://www.elastic.co/downloads).
+We need Logstash 1.5, since it introduces support for SSL connections.   
+
 
 ## Creating an Elasticsearch Cluster
 
-Creating a new trial cluster in Found is just a matter of logging in and pressing a button.  It takes a few seconds until the cluster is ready, and a screen with some basic information on how to connect pops up. We need the address for the HTTPS endpoint, so copy that out.
+Creating a new trial cluster in Found is just a matter of logging in and pressing a button. It takes a few seconds until the cluster is ready, and a screen with some basic information on how to connect pops up. We need the address for the HTTPS endpoint, so copy that out.
 
 ## Configuring Logstash
 
@@ -33,10 +35,10 @@ Now, with the brand new SSL connection option in Logstash, connecting to Found i
 input { stdin{} }
 
 output {
-    elasticsearch {
+  elasticsearch {
     protocol => http
     host => REPLACE_WITH_FOUND_CLUSTER_HOSTNAME
-    port =>  "9243" # Check the port also
+    port => "9243" # Check the port also
     ssl => true
 }
 
@@ -49,14 +51,14 @@ Start up Logstash using
 
 ```bin\logstash.bat agent --verbose -f found.conf```
 
-You should see  a message similar to 
+You should see a message similar to 
 ````
 Create client to elasticsearch server on `https://....foundcluster.com:9243`: {:level=>:info}
 ````
 Once you see "Logstash startup completed" type in your favorite test term on the terminal. Mine is "fisk" so I type that.
 You should see output on your screen showing what Logstash intends to pass on to elasticsearch.
 
-We want to make sure this actually hits the cloud, so open a browser window and paste the HTTPS link from before, append  `/_search` to the URL and hit enter.
+We want to make sure this actually hits the cloud, so open a browser window and paste the HTTPS link from before, append `/_search` to the URL and hit enter.
 You should now see the search results from your newly created Elasticsearch cluster, containing the favorite term you just typed in. We have a functioning connection from Logstash on our machine to Elasticsearch in the cloud! Congratulations! 
 
 ## Configuring Kibana 4
@@ -73,10 +75,10 @@ Of course, we need to verify that this really works, so we open up Kibana on [ht
 Found by Elastic has worked hard to make the previous steps easy. We created an Elasticsearch cluster, fed data into it and displayed in Kibana in less than 5 minutes. We must have forgotten something!? And yes, of course! Something about security. We made sure to use secure connections with SSL, and the address generated for our cluster contains a 32 character long, randomly generated list of characters, which is pretty hard to guess. Should, however, the address slip out of our hands, hackers could easily delete our entire cluster. And we don’t want that to happen. So let’s see how we can make everything work when we add some basic security measures.
 
 ## Access Control Lists 
-Found by Elastic has support for access control lists, where you can set up lists of usernames and passwords, with lists of rules that deny/allow access to various paths within Elasticsearch. This makes it easy to create a "read only" user, for instance, by creating a user with a rule that only allows access to the `/_search` path.  Found by Elastic has a sample configuration with users searchonly and readwrite. We will use these as starting point but first we need to figure out what Kibana needs.
+Found by Elastic has support for access control lists, where you can set up lists of usernames and passwords, with lists of rules that deny/allow access to various paths within Elasticsearch. This makes it easy to create a "read only" user, for instance, by creating a user with a rule that only allows access to the `/_search` path. Found by Elastic has a sample configuration with users searchonly and readwrite. We will use these as starting point but first we need to figure out what Kibana needs.
 
 ## Kibana 4 Security
-Kibana 4 stores its configuration in a special index, by default named ".kibana". The Kibana webserver needs write access to this index. In addition, all Kibana users need write access to this index, for storing dashboards, visualizations and searches, and  read access to all the indices that it will query. More details about the access demands of Kibana 4 can be found on the [elastic blog](http://www.elastic.co/guide/en/shield/current/_shield_with_kibana_4.html).
+Kibana 4 stores its configuration in a special index, by default named ".kibana". The Kibana webserver needs write access to this index. In addition, all Kibana users need write access to this index, for storing dashboards, visualizations and searches, and read access to all the indices that it will query. More details about configuring Kibana 4 can be found in the article [Using Kibana in a Production Environment](http://www.elastic.co/guide/en/kibana/current/production.html), for details on the access demands of Kibana, see [Configuring Roles for Kibana 4 Users](http://www.elastic.co/guide/en/shield/current/_shield_with_kibana_4.html#kibana4-roles).
 
 For this demo, we will simply copy the “readwrite” user from the sample twice, naming one kibanaserver, the other kibanauser. 
 ````
@@ -93,7 +95,7 @@ Setting Access Control in Found:
           require: true
     action: allow
 ````
-Press save and the changes are immediately effective. Try to reload the Kibana at  [http://localhost:5601](http://localhost:5601), you should be denied access. 
+Press save and the changes are immediately effective. Try to reload the Kibana at [http://localhost:5601](http://localhost:5601), you should be denied access. 
 
 Open up the kibana.yml file from before and modify it: 
 ````
