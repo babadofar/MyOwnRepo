@@ -3,20 +3,20 @@
 # Analyzing weblogs with Elasticsearch in the cloud: Using Logstash & Kibana on Found by Elastic pt. I
 
 This is part one of a two post blog series, aiming to demonstrate how to feed logs from IIS into Elasticsearch and Kibana via Logstash, using the hosted services provided by Found by Elastic. 
-This post will deal with setting up the basic functionality and securing connections. Part 2 will show how to configure Logstash to read from IIS log files, and how to use Kibana 4 to visualize web traffic.
-
 
 Once you start putting data into elasticsearch, it’s hard to stop, and before you know it, your cluster is running out of capacity. So you face yourself with the question: "How to expand my cluster?".  Not if you are using Found by Elastic, which provides a hosted Elasticsearch service where disk space and node clustering setup is all taken care of. 
+
+This post will deal with setting up the basic functionality and securing connections. Part 2 will show how to configure Logstash to read from IIS log files, and how to use Kibana 4 to visualize web traffic.
 
 ## Getting the bits
 For this demo I will be running Logstash and Kibana from my Windows laptop. 
 If you want to follow along, download and extract Logstash 1.5.RC4 or later, and Kibana 4.0.2 or later from [https://www.elastic.co/downloads](https://www.elastic.co/downloads) 
 
-## Creating an Elasticsearch cluster in Found by Elastic
+## Creating an Elasticsearch cluster
 
 Creating a new trial cluster in Found is just a matter of logging in and pressing a button.  It takes a few seconds until the cluster is ready, and a screen with some basic information on how to connect pops up. We need the address for the HTTPS endpoint, so copy that out.
 
-## Configuring Logstash to use Found by Elastic 
+## Configuring Logstash 
 
 Now with the brand new SSL connection option in Logstash, connecting to Found is as simple as this logstash configuration 
 ```
@@ -47,7 +47,7 @@ You should see output on your screen showing what Logstash intends to pass on to
 We want to make sure this actually hit the cloud, so open a browser window and paste in the HTTPS link from before, append  "/_search" to the URL and hit enter.
 You should now see the search results from your newly created elasticsearch cluster, containing the favorite term you just typed in. We have a functioning connection from logstash on our machine to Elasticsearch in the cloud! Congratulations! 
 
-## Configuring Kibana 4 to use Found by Elastic
+## Configuring Kibana 4 
 Kibana 4 comes with a built in webserver. The configuration is done in a kibana.yml file in the config directory. Connecting to Elasticsearch in the cloud comes down to inserting the address of the elasticsearch instance
 ````
 # The Elasticsearch instance to use for all your queries.
@@ -58,7 +58,7 @@ Of course, we need to verify that this really works, so we open up Kibana on [ht
 ![Kibana test](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/kibanatest.png)
 
 ## Locking it down
-Now this wasn’t very hard. We created an elasticsearch cluster, fed data into it and displayed in Kibana in less than 5 minutes. We must have forgotten something!? And yes, of course! Something about security. We made sure to use secure connections with SSL, and the address generated for our cluster contains a 32 character long, randomly generated list of characters, which is pretty hard to guess. Should, however, the address slip out of our hands, hackers could easily delete our entire cluster. And we don’t want that to happen. So let’s see how we can make everything work when we add some basic security measures.
+Found by Elastic has worked hard to make the previous steps easy. We created an elasticsearch cluster, fed data into it and displayed in Kibana in less than 5 minutes. We must have forgotten something!? And yes, of course! Something about security. We made sure to use secure connections with SSL, and the address generated for our cluster contains a 32 character long, randomly generated list of characters, which is pretty hard to guess. Should, however, the address slip out of our hands, hackers could easily delete our entire cluster. And we don’t want that to happen. So let’s see how we can make everything work when we add some basic security measures.
 
 ## Access control lists 
 Found by Elastic has support for access control lists, where you can set up lists of usernames and passwords, with lists of rules that deny/allow access to various paths within elasticsearch. This makes it easy to create a "read only" user, for instance, by creating a user with a rule that only allows access to the "/_search" path.  Found by Elastic has a sample configuration with users searchonly and readwrite. We will use these as starting point but first we need to figure out what Kibana needs
@@ -101,7 +101,7 @@ Type in kibanauser as the username, and the password . You should now again be p
 Logstash will also need to supply credentials when connecting to Found by Elastic. We reuse permission from the readwrite user once again, this time giving the name "logstash". 
 It is simply a matter of supplying the username and password in the configuration file. 
 ````
-output{
+output {
     elasticsearch {
      …. 
     user => “logstash”,
@@ -111,5 +111,7 @@ output{
 
 ````
 
-This has been a short dive into how to setup Logstash and Kibana with Found by Elastic. The recent changes done in order to support the Shield plugin for Elasticsearch, Logstash and Kibana, make it very easy to use the secure features of Found by Elastic. In the next post we will look into feeding logs from IIS into Elasticsearch via Logstash, and visualizing the most used query terms in Kibana.
+
+## Wrapping it up
+This has been a short dive into Logstash and Kibana with Found by Elastic. The recent changes done in order to support the Shield plugin for Elasticsearch, Logstash and Kibana, make it very easy to use the secure features of Found by Elastic. In the next post we will look into feeding logs from IIS into Elasticsearch via Logstash, and visualizing the most used query terms in Kibana.
  
