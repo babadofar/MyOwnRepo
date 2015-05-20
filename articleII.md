@@ -43,7 +43,7 @@ The full config file for IIS can be found at [gist](https://gist.github.com/baba
 Again, there is no standard defined format for IIS logs, so while this grokked my logs, it might not grok yours. 
 
 ## Grok development
-One of the most convenient ways to work with creating grok patterns is [the Grok Constructor](http://grokconstructor.appspot.com/do/construction). Paste in some sample log lines, and press the Go! button. A long list of suggested matches for the first field is displayed. Select the best match for the first field matching your data, keep on selecting untill the whole line is covered. 
+One of the most convenient ways to work with creating grok patterns is [the Grok Constructor](http://grokconstructor.appspot.com/do/construction). Paste in some sample log lines, and press the Go! button. A long list of suggested matches for the first field is displayed. Select the best match for the first field matching your data, keep on selecting untill the whole line is covered. If you need more tips on how to work with developing Logstash configurations, see [this blog post](http://blog.comperiosearch.com/blog/2015/04/10/how-to-develop-logstash-configuration-files/).
 
 
 ## Running Logstash
@@ -65,10 +65,11 @@ Clicking on the [Discover](http://www.elastic.co/guide/en/kibana/current/discove
 ![FieldStats](https://github.com/babadofar/MyOwnRepo/blob/master/images/KibanaDiscoverFieldStats.png)
 
 ## Graphing Most used query terms 
-For a search application, the most interesting metrics is perhaps the most used query terms. Select "query" from the list of fields. Clicking on the "Visualize" button at the bottom of the field metrics opens up the Visualize tab with a bar chart of most used query terms. If you want the analysis to show complete queries, and not broken up into terms, select the "query.raw" field rather than "query". Logstash by default indexes all fields twice, one using the default analyzer, and the other not analyzed. For analyzed fields, Elasticsearch splits the field contents into individual terms (tokens), which is very useful when searching. However, when analyzing user behavior and dealing with statistics, you often need the complete query string given by the user, this will be available in the not analyzed version of the field, which you can access by using the "field.raw" notation. ![Term Raw Selector](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/KibanaTermRawSelector.png)
+For a search application, the most interesting metric is perhaps the most used query terms. Select "query" from the list of fields. Clicking on the "Visualize" button at the bottom of the field metrics opens up the Visualize tab with a bar chart of most used query terms. If you want the analysis to show complete queries (not broken up into terms), select the "query.raw" field rather than "query". Logstash by default indexes all fields twice, using the default analyzer, and  not analyzed. For analyzed fields Elasticsearch splits the field contents into individual terms (tokens), which is very useful when searching. However, when analyzing user behavior and dealing with statistics, you often need the complete query string given by the user. This will be available in the not analyzed version of the field, which you can access by using the "field.raw" notation. ![Term Raw Selector](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/KibanaTermRawSelector.png)
 
 ![Most used queries](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/mostUsedQueries.png)
-The distribution of search queries normally follow something similar to Zipf's law, or the 80/20 rule, where 20% of the queries account for 80% of traffic. 
+The graph shows an interesting phenomenon often seen where natural language is used. 
+The distribution of search queries normally follow something similar to [Zipf's law](http://en.wikipedia.org/wiki/Zipf%27s_law), or the [80/20 rule](http://en.wikipedia.org/wiki/Pareto_principle), where 20% of the queries account for 80% of traffic. 
 
 
 ## Graphing Number of Requests
@@ -82,4 +83,4 @@ Again, start a new visualization, of type "Line Chart", "from a new search". Now
 ![Average Response Time](https://raw.githubusercontent.com/babadofar/MyOwnRepo/master/images/AverageResponseTimes.png)
 
 
-This is just a scratch on the surface of how to work with visualizing log statistics using the ELK stack. The next natural step is to start adding sub aggregations, for instance showing different colors for each browser, geo-location etc. Hopefully, this will be enough to set you off into your own journey into the realm of the ELK-stack.
+This has been a short guide to how you can get an overview on user engagement and application performance. The ELK-stack offers a flexible toolset for analyzing and visualizing data, these steps are just scratching the surface. Hopefully, this will be enough to set you off into your own journey into the realm of the ELK-stack.
