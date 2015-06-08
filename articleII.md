@@ -84,3 +84,16 @@ Again, start a new visualization, of type "Line Chart", "from a new search". Now
 
 
 This has been a short guide to how you can get an overview on user engagement and application performance. The ELK-stack offers a flexible toolset for analyzing and visualizing data, these steps are just scratching the surface. Hopefully, this will be enough to set you off into your own journey into the realm of the ELK-stack.
+
+Some references:
+[Kibana video tutorials part 1](https://www.elastic.co/blog/kibana-4-video-tutorials-part-1)
+
+[Kibana video tutorials part 2](https://www.elastic.co/blog/kibana-4-video-tutorials-part-2)
+
+[Kibana User Guide](https://www.elastic.co/guide/en/kibana/current/index.html)
+
+[Logstash Reference](https://www.elastic.co/guide/en/logstash/current/index.html)
+
+And last - to be able to use Kibana properly, it really helps to know how aggregations work:
+
+[Elasticsearch Guide - Aggregations](https://www.elastic.co/guide/en/elasticsearch/guide/current/aggregations.html)
